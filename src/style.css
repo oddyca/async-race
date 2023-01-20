@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#app {
+    background-color: black;
+    color: white;
+    min-height: 100vh;
+}
+
+.bg-wrapepr {
+    background: url('./assets/synth-bg.jpg');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 590px;
+    width: 100%;
+    border: solid hotpink;
+    position: absolute;
+}
+
+.car {
+    border: solid limegreen;
+    width: fit-content;
+}
