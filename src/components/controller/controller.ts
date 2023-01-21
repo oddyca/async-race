@@ -1,9 +1,11 @@
 const baseURL = 'http://localhost:3000';
 
-interface QueryParams {
+// Создаем блупринт для машины, чтобы затем создавать инстансы и хранить их в Map
+
+export interface QueryParams {
     [key: string]: string,
 }
-type QueryParamStrings = QueryParams[];
+export type QueryParamStrings = QueryParams[];
 
 function generateQueryString(queryParams: QueryParamStrings) {
     queryParams.length 
@@ -45,7 +47,7 @@ export class CarBlueprint {
 
 export async function getAllCars() {
     const get: Promise<Response> = fetch(`${baseURL}/garage`);
+    const fetchedData = await (await get).json();
 
-    const fetchedData = await (await get).json()
-    console.log(fetchedData);
+    return fetchedData;
 }
