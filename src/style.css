@@ -1,3 +1,9 @@
+:root {
+    --neon-color: rgb(18, 194, 165);
+    --neon-color-hover: rgb(0, 255, 213);
+    --comment-grey: rgb(177, 177, 177);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -10,18 +16,119 @@
     min-height: 100vh;
 }
 
-.bg-wrapepr {
+.garage-container {
     background: url('./assets/synth-bg.jpg');
-    background-size: 50%;
+    background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center;
-    height: 590px;
+    background-position-y: -450px;
+    height: 100%;
     width: 100%;
-    border: solid hotpink;
     position: absolute;
+    padding: 1rem;
+}
+
+.carlist-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.garage_car-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.track {
+    
+}
+
+.car-slot {
+    min-width: fit-content;
+    width: 160px;
+}
+
+.track_car-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.car-controls_buttons {
+    padding: 2px 4px;
+    border: solid 1px var(--neon-color);
+    background: none;
+    color: var(--neon-color);
+    cursor: pointer;
+}
+
+.car-controls_buttons:hover {
+    border: solid 1px var(--neon-color-hover);
+    color: var(--neon-color-hover);
+    box-shadow: 0px 0px 5px var(--neon-color-hover);
+}
+
+.car-name {
+    font-size: 12px;
+    color: var(--comment-grey);
 }
 
 .car {
-    border: solid limegreen;
     width: fit-content;
+    height: 50px;
+    position: relative;
+    display: flex;
+}
+
+.car-slot_engine-controls {
+    display: flex;
+}
+
+.engine-button {
+    height: fit-content;
+    width: fit-content;
+    padding: 2px 2px;
+    border-radius: 4px;
+}
+
+.car-body {
+    position: relative;
+}
+
+.car_body-frame {
+    position: relative;
+    bottom: 16px;
+    width: 100px;
+    height: 60px;
+}
+
+.wheels {
+    position: absolute;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+}
+
+.car_front-wheel {
+    right: 17.51px;
+}
+.car_rear-wheel {
+    left: 11px;
+}
+
+.car_wheel-img {
+    width: 15px;
+    height: 15px;
+}
+.track {
+    width: 100%;
+    border-bottom: 1px solid hotpink;
+}
+
+
+@media (max-width: 1440px) {
+    .garage-container {
+        background-position-y: -150px;
+    }
 }
