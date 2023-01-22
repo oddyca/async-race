@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { getAllCars, QueryParamStrings } from '../../controller/controller';
+import { getAllCars, QueryParamStrings, CarBlueprint } from '../../controller/controller';
+import { App } from '../../app';
 
 export class CarList {
     constructor() {}
@@ -45,6 +46,13 @@ export class CarList {
             const carRemove = document.createElement('button');
             carRemove.classList.add('car-controls_buttons', 'car-controls_delete');
             carRemove.innerText = 'DELETE';
+            carRemove.dataset
+            carRemove.onclick = async () => {
+                await CarBlueprint.deleteCar(car.id);
+                const carsToRender = await App.run();
+                document.querySelector('.garage-container')?.remove();
+                document.querySelector('#app')?.append(carsToRender);
+            };
 
             carControls.append(carSelect);
             carControls.append(carRemove);
