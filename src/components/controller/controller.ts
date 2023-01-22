@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:3000';
+export const baseURL = 'http://localhost:3000';
 
 // Создаем блупринт для машины, чтобы затем создавать инстансы и хранить их в Map
 
@@ -17,18 +17,31 @@ export class CarBlueprint {
 
     name: string;
     color: string;
-    id: number;
 
-    constructor(name: string, color: string, id: number) {
+    constructor(name: string, color: string) {
         this.name = name,
-        this.color = color,
-        this.id = id
+        this.color = color
     }
 
-    async createCar() {}
+    async createCar() {
+        const toServer: QueryParams = {
+            name: this.name,
+            color: this.color
+        }
 
-    async getCar() {
-        const params: QueryParamStrings = [{'key': 'id', 'value': `${this.id}`}];
+        const response = await fetch(`${baseURL}/garage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(toServer)
+        });
+
+        return response;
+    }
+
+    async getCar(id: number) {
+        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}];
 
         const qString = generateQueryString(params);
 
@@ -37,7 +50,12 @@ export class CarBlueprint {
         console.log(fetchedData);
     }
 
-    async deleteCar() {} // GET -> /garag: id
+    static async deleteCar(id: string) {
+        const response = await fetch(`${baseURL}/garage/${id}`, {
+            method: 'DELETE'
+        });
+        return response;
+    }
 
     // Engine
     async startEngine() {} // PATCH -> /enging: id, status = started
