@@ -6,9 +6,13 @@ export const updateState = (data: string) => {
 };
 
 export interface QueryParams {
-    [key: string]: string,
+    [key: string]: string
 }
 export type QueryParamStrings = QueryParams[];
+
+interface Stats {
+    [key:string]: number
+}
 
 function generateQueryString(queryParams: QueryParamStrings): string {
     if (queryParams.length) { 
@@ -122,6 +126,23 @@ export class CarBlueprint {
         console.log(response)
         return response;
     }
+
+    // Winner
+    static async createWinner(id: number, wins: number, time: number) {
+        const toServer: Stats = {
+            id: id,
+            wins: wins,
+            time: time
+        }
+        const response = await fetch(`${baseURL}/winners`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(toServer)
+        });
+        return response;
+    }
 }
 
 export async function getAllCars() {
@@ -151,12 +172,14 @@ export async function getAllWinners(page?:string, limit?:string, sort?:string, o
     console.log(fetchedData)
     return fetchedData
 }
+interface Winners {
+    [id: string]: number[]
+}
+export const winner: Winners = {}
 
 export async function animateCar(id: string) {
     const responseEngineStart = await CarBlueprint.startEngine(id, 'started');
     const responseEngineStartData = await (await responseEngineStart).json();
-
-    
 
     const carCoord = document.querySelector(`[data-id='${id}']`)?.getBoundingClientRect().left as number;
     const flagCoord = document.querySelector('.finish-flag')?.getBoundingClientRect().left as number;
@@ -181,11 +204,14 @@ export async function animateCar(id: string) {
     }
 
     try {
-        const isFailed = await CarBlueprint.switchEngine(id, 'drive');
-
+        const isFailed = await CarBlueprint.switchEngine(id, 'drive') as Response;
         if (!isFailed.ok) throw new Error('Engine failed');
+
+        winner[id] = [responseEngineStartData.velocity]; // this but when the whole race is over
+        winner[id].push(animationDuration);
     } 
     catch(e) {
         window.cancelAnimationFrame(animID);
     }
+    return responseEngineStart
 }

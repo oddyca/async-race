@@ -135,6 +135,9 @@ export class CarList {
             engineStart.onclick = async () => {
                 await animateCar(`${car.id}`);
             }
+            engineStop.onclick = async () => {
+
+            }
         });
 
         carlistContainer.append(carList);
