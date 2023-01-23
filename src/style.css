@@ -105,7 +105,9 @@
 }
 
 .track {
-    
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10rem;
 }
 
 .car-slot {
@@ -180,17 +182,25 @@ input[type='radio'] {
     width: fit-content;
     padding: 2px 2px;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .car-body {
     position: relative;
+    height: fit-content;
+    transform: translateX(100px);
+}
+
+#car-body-1 {
+    position: relative;
+    height: fit-content;
 }
 
 .car_body-frame {
     position: relative;
-    bottom: 16px;
+    bottom: 0px;
     width: 100px;
-    height: 60px;
+    height: 45px;
 }
 
 .wheels {
