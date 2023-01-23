@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { getAllCars, QueryParamStrings, CarBlueprint } from '../../controller/controller';
+import { getAllCars, QueryParamStrings, CarBlueprint, updateState } from '../../controller/controller';
 import { App } from '../../app';
 
 export class CarList {
@@ -19,6 +19,7 @@ export class CarList {
 
         const carList = document.createElement('div');
         carList.classList.add('garage_car-list');
+        //carList.setAttribute('name', 'car-list-form');
         cars.map((car) => {
             const carTrack = document.createElement('div');
             carTrack.classList.add('track');
@@ -37,12 +38,31 @@ export class CarList {
 
             engineControls.append(engineStart);
             engineControls.append(engineStop);
-
             const carControls = document.createElement('div');
             carControls.classList.add('track_car-controls');
-            const carSelect = document.createElement('button');
+
+            const carSelect = document.createElement('label');
             carSelect.classList.add('car-controls_buttons','car-controls_select');
             carSelect.innerText = 'SELECT';
+            carSelect.setAttribute('for', car.id);
+            carSelect.onclick = async () => {
+                updateState(car.id);
+            }
+            
+            const carSelectRadio = document.createElement('input');
+            carSelectRadio.setAttribute('type', 'radio');
+            carSelectRadio.setAttribute('name', 'car-list-form');
+            carSelectRadio.id = car.id;
+            carSelectRadio.dataset.name = car.name;
+            carSelectRadio.dataset.color = car.color;
+            carSelectRadio.onchange = async (e) => {
+                (<HTMLInputElement>document.querySelector('.update-name')).disabled = false;
+                (<HTMLInputElement>document.querySelector('.update-name')).value = (<HTMLInputElement>e.currentTarget).dataset.name as string;
+                (<HTMLInputElement>document.querySelector('.update-color')).disabled = false;
+                (<HTMLInputElement>document.querySelector('.update-color')).value = (<HTMLInputElement>e.currentTarget).dataset.color as string;
+                (<HTMLInputElement>document.querySelector('.update-car_button')).disabled = false;
+            }
+
             const carRemove = document.createElement('button');
             carRemove.classList.add('car-controls_buttons', 'car-controls_delete');
             carRemove.innerText = 'DELETE';
@@ -54,6 +74,7 @@ export class CarList {
                 document.querySelector('#app')?.append(carsToRender);
             };
 
+            carSelect.append(carSelectRadio);
             carControls.append(carSelect);
             carControls.append(carRemove);
 

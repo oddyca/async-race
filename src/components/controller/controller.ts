@@ -1,6 +1,9 @@
 export const baseURL = 'http://localhost:3000';
 
-// Создаем блупринт для машины, чтобы затем создавать инстансы и хранить их в Map
+export let state: string;
+export const updateState = (data: string) => {
+    state = data;
+};
 
 export interface QueryParams {
     [key: string]: string,
@@ -47,13 +50,28 @@ export class CarBlueprint {
 
         const fetchResponse = fetch(`${baseURL}/garage/${qString}`);
         const fetchedData = await (await fetchResponse).json();
-        console.log(fetchedData);
     }
 
     static async deleteCar(id: string) {
         const response = await fetch(`${baseURL}/garage/${id}`, {
             method: 'DELETE'
         });
+        return response;
+    }
+
+    static async updateCar(name:string, color: string, id: string) {
+        const toServer: QueryParams = {
+            name: name,
+            color: color
+        }
+        const response = await fetch(`${baseURL}/garage/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(toServer)
+        });
+
         return response;
     }
 

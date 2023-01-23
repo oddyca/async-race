@@ -1,4 +1,4 @@
-import { baseURL, CarBlueprint } from '../../controller/controller';
+import { baseURL, CarBlueprint, state } from '../../controller/controller';
 import { App } from '../../app';
 
 export class GarageControls {
@@ -23,7 +23,6 @@ export class GarageControls {
         createButton.onclick = async () => {
             const carName = (<HTMLInputElement>document.querySelector('.create-name')).value;
             const carColor = (<HTMLInputElement>document.querySelector('.create-color')).value;
-            console.log(carName, carColor);
 
             const newCar = new CarBlueprint(carName, carColor);
             await newCar.createCar();
@@ -42,15 +41,27 @@ export class GarageControls {
         updateCar.classList.add('garage-controls_update-car');
         const updateNameInput = document.createElement('input');
         updateNameInput.setAttribute('type', 'text');
+        updateNameInput.classList.add('update-name');
         updateNameInput.required = true;
         updateNameInput.disabled = true;
         const updateCarColor = document.createElement('input');
         updateCarColor.setAttribute('type', 'color');
+        updateCarColor.classList.add('update-color');
         updateCarColor.disabled = true;
         const updateButton = document.createElement('button');
         updateButton.innerText = 'UPDATE';
         updateButton.disabled = true;
         updateButton.classList.add('update-car_button');
+        updateButton.onclick = async () => {
+            const carName = (<HTMLInputElement>document.querySelector('.update-name')).value;
+            const carColor = (<HTMLInputElement>document.querySelector('.update-color')).value;
+
+            await CarBlueprint.updateCar(carName, carColor, state)
+
+            const carsToRender = await App.run();
+            document.querySelector('.garage-container')?.remove();
+            document.querySelector('#app')?.append(carsToRender);
+        }
 
         updateCar.append(updateNameInput);
         updateCar.append(updateCarColor);
