@@ -1,5 +1,5 @@
 import { Garage } from './garage/garage';
-import { CarBlueprint } from './controller/controller';
+import { Winners } from './winners/winners'
 
 export class App {
     constructor(){}
@@ -7,7 +7,7 @@ export class App {
     static async run() {
         const GaragePage = new Garage();
         const garageCars = await GaragePage.render();
-        
+
         return garageCars;
     }
 }

@@ -25,6 +25,18 @@
     min-height: 100vh;
 }
 
+.navbar {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar_to {
+    padding: .5rem 2rem;
+    cursor: pointer;
+    border: solid hotpink;
+    text-decoration: none;
+}
+
 .garage-container {
     background: url('./assets/synth-bg.jpg');
     background-size: 100%;
