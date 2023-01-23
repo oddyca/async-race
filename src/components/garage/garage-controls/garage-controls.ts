@@ -1,4 +1,4 @@
-import { baseURL, CarBlueprint, state } from '../../controller/controller';
+import { animateCar, CarBlueprint, state, winner } from '../../controller/controller';
 import { App } from '../../app';
 
 export class GarageControls {
@@ -73,17 +73,46 @@ export class GarageControls {
         const raceButton = document.createElement('button');
         raceButton.innerText = 'RACE';
         raceButton.classList.add('race-controls', 'race-button');
+
+        interface CarElements{
+            [id: number]: HTMLDivElement
+        }
         raceButton.onclick = () => {
-            
+            raceButton.disabled = true;
+            const allCars = document.querySelectorAll('[data-id]') as CarElements;
+
+            const allPromise: Promise<Response>[] = [];
+            Object.values(allCars).map(async (x) => {
+                const animateResponse = animateCar(`${x.dataset.id}`) as Promise<Response>
+                allPromise.push(animateResponse);
+            })
+            Promise.all(allPromise).then(async () => {
+                const sorted = Object.keys(winner).sort((a,b) => winner[b][0] - winner[a][0]);
+                const winnerID = sorted[0];
+                const time = winner[winnerID][0];
+                // const velocity = winner[winnerID][1];
+                console.log(sorted, winnerID);
+
+                const winnerFetch = fetch(`http://localhost:3000/winner/${winnerID}`)
+                const wins = await (await winnerFetch).json();
+                const winsNum = wins.wins
+
+                CarBlueprint.createWinner(parseInt(winnerID), winsNum !== undefined ? winsNum + 1 : 1, time);
+            });
         }
 
 
         const resetButton = document.createElement('button');
         resetButton.classList.add('race-controls', 'reset-button');
         resetButton.innerText = 'RESET';
+
+        resetButton.disabled = true;                            // DISABLED
+
         const generateCarsButton = document.createElement('button');
         generateCarsButton.innerText = 'GENERATE CARS';
         generateCarsButton.classList.add('race-controls', 'generate-button');
+
+        generateCarsButton.disabled = true;                     // DISABLED
 
         raceControls.append(raceButton);
         raceControls.append(resetButton);
