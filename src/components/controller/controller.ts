@@ -131,6 +131,27 @@ export async function getAllCars() {
     return fetchedData;
 }
 
+export async function getAllWinners(page?:string, limit?:string, sort?:string, order?:string) {
+    let fetchedData;
+    const params: QueryParamStrings = [
+        {'key': '_page', 'value': `${page}`}, 
+        {'key': '_limit', 'value': `${limit}`},
+        {'key': '_sort', 'value': `${sort}`},
+        {'key': '_order', 'value': `${order}`}
+    ];
+    const qString = generateQueryString(params);
+
+    if (!arguments.length) {
+        const get: Promise<Response> = fetch(`${baseURL}/winners`);
+        fetchedData = await (await get).json();
+    } else {
+        const get: Promise<Response> = fetch(`${baseURL}/winners${qString}`);
+        fetchedData = await (await get).json();
+    }
+    console.log(fetchedData)
+    return fetchedData
+}
+
 export async function animateCar(id: string) {
     const responseEngineStart = await CarBlueprint.startEngine(id, 'started');
     const responseEngineStartData = await (await responseEngineStart).json();
