@@ -73,6 +73,11 @@ export class GarageControls {
         const raceButton = document.createElement('button');
         raceButton.innerText = 'RACE';
         raceButton.classList.add('race-controls', 'race-button');
+        raceButton.onclick = () => {
+            
+        }
+
+
         const resetButton = document.createElement('button');
         resetButton.classList.add('race-controls', 'reset-button');
         resetButton.innerText = 'RESET';

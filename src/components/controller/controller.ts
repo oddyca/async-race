@@ -181,7 +181,9 @@ export async function animateCar(id: string) {
     }
 
     try {
-        await CarBlueprint.switchEngine(id, 'drive');
+        const isFailed = await CarBlueprint.switchEngine(id, 'drive');
+
+        if (!isFailed.ok) throw new Error('Engine failed');
     } 
     catch(e) {
         window.cancelAnimationFrame(animID);
