@@ -188,12 +188,6 @@ input[type='radio'] {
 .car-body {
     position: relative;
     height: fit-content;
-    transform: translateX(100px);
-}
-
-#car-body-1 {
-    position: relative;
-    height: fit-content;
 }
 
 .car_body-frame {
@@ -224,6 +218,11 @@ input[type='radio'] {
 .track {
     width: 100%;
     border-bottom: 1px solid hotpink;
+}
+
+.finish-flag {
+    height: 32px;
+    width: auto;
 }
 
 

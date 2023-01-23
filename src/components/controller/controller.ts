@@ -91,9 +91,37 @@ export class CarBlueprint {
             body: JSON.stringify(toServer)
         });
         return response;
-    } // PATCH -> /enging: id, status = started
-    static async stopEngine() {} // PATCH -> /enging: id, status = stopped
-    static async switchEngine() {} // PATCH -> /engine: id, status = [drive]
+    }
+    static async stopEngine(id: string, status: string) {
+        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': `${status}`}];
+        const qString = generateQueryString(params);
+
+        const toServer: QueryParams = {
+            id: id,
+            status: status
+        }
+        const response = await fetch(`${baseURL}/engine${qString}`, {
+            method: 'PATCH',
+            body: JSON.stringify(toServer)
+        });
+        console.log(response)
+        return response;
+    }
+    static async switchEngine(id: string, status: string) {
+        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': `${status}`}];
+        const qString = generateQueryString(params);
+
+        const toServer: QueryParams = {
+            id: id,
+            status: status
+        }
+        const response = await fetch(`${baseURL}/engine${qString}`, {
+            method: 'PATCH',
+            body: JSON.stringify(toServer)
+        });
+        console.log(response)
+        return response;
+    }
 }
 
 export async function getAllCars() {
@@ -104,19 +132,22 @@ export async function getAllCars() {
 }
 
 export async function animateCar(id: string) {
-    const response = await CarBlueprint.startEngine(id, 'started');
-    const responseData = await (await response).json();
-    const carCoord = document.getElementById(`car-number-${id}`)?.getBoundingClientRect().left as number;
+    const responseEngineStart = await CarBlueprint.startEngine(id, 'started');
+    const responseEngineStartData = await (await responseEngineStart).json();
+
+    
+
+    const carCoord = document.querySelector(`[data-id='${id}']`)?.getBoundingClientRect().left as number;
     const flagCoord = document.querySelector('.finish-flag')?.getBoundingClientRect().left as number;
 
     const distance =  Math.floor(flagCoord - carCoord); // px
-    const animationDuration = Math.floor(responseData.distance / responseData.velocity); // ms
+    const animationDuration = Math.floor(responseEngineStartData.distance / responseEngineStartData.velocity); // ms
 
     let startAnimation: number;
-    const carToMove = document.getElementById(`car-body-${id}`) as HTMLDivElement;
-    console.log(carToMove)
+    const carToMove = document.querySelector(`[data-id='${id}']`) as HTMLDivElement;
 
-    requestAnimationFrame(function measure(time){
+    let animID = requestAnimationFrame(measure);
+    function measure(time: number){
         if (!startAnimation) {
             startAnimation = time;
         }
@@ -124,9 +155,14 @@ export async function animateCar(id: string) {
         const translate = Math.floor(progress * distance);
         carToMove.style.transform = `translateX(${translate}px)`;
         if (progress < 1) {
-            requestAnimationFrame(measure);
+            animID = requestAnimationFrame(measure)
         }
-    });
+    }
 
-    console.log(distance, animationDuration);
+    try {
+        await CarBlueprint.switchEngine(id, 'drive');
+    } 
+    catch(e) {
+        window.cancelAnimationFrame(animID);
+    }
 }
