@@ -37,6 +37,10 @@
     text-decoration: none;
 }
 
+.navbar_to, .navbar_to:visited, .navbar_to:hover, .navbar_to:active {
+    color: white;
+  }
+
 .garage-container {
     background: url('./assets/synth-bg.jpg');
     background-size: 100%;
@@ -237,6 +241,23 @@ input[type='radio'] {
     width: auto;
 }
 
+.winners-table {
+    display: flex;
+    border: solid 1px var(--neon-color-hover);
+    width: fit-content;
+}
+
+.column-title {
+    background-color: var(--neon-color);
+    padding: .2rem 2rem;
+}
+
+.table-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
 
 @media (max-width: 1440px) {
     .garage-container {
