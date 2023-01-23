@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { getAllCars, QueryParamStrings, CarBlueprint, updateState } from '../../controller/controller';
+import { getAllCars, QueryParamStrings, CarBlueprint, updateState, animateCar } from '../../controller/controller';
 import { App } from '../../app';
 
 export class CarList {
@@ -89,14 +89,16 @@ export class CarList {
             carContainer.append(engineControls);
 
             const carBody = document.createElement('div');
-            carBody.classList.add('car-body');
+            // carBody.classList.add('car-body');
+            carBody.id = `car-body-${car.id}`
 
             const carFrame = document.createElement('div');
             carFrame.classList.add('car_body-frame');
+            carFrame.id = `car-number-${car.id}`
             carFrame.setAttribute('style', 
                 `
                 background-color: ${car.color};
-                -webkit-mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 100px no-repeat;
+                -webkit-mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 60px no-repeat;
                 mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 100px no-repeat;
                 `)
             const carImg = document.createElement('img');
@@ -123,7 +125,16 @@ export class CarList {
             carContainer.append(carBody)
             carSlot.append(carContainer);
             carTrack.append(carSlot);
+
+            const finishFlag = document.createElement('img');
+            finishFlag.setAttribute('src', require('../../../assets/flag.svg'));
+            finishFlag.classList.add('finish-flag');
+            carTrack.append(finishFlag);
             carList.append(carTrack);
+
+            engineStart.onclick = async () => {
+                await animateCar(`${car.id}`);
+            }
         });
 
         carlistContainer.append(carList);
