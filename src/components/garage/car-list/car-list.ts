@@ -89,8 +89,8 @@ export class CarList {
             carContainer.append(engineControls);
 
             const carBody = document.createElement('div');
-            // carBody.classList.add('car-body');
-            carBody.id = `car-body-${car.id}`
+            carBody.classList.add('car-body');
+            carBody.dataset.id = `${car.id}`
 
             const carFrame = document.createElement('div');
             carFrame.classList.add('car_body-frame');
@@ -99,7 +99,7 @@ export class CarList {
                 `
                 background-color: ${car.color};
                 -webkit-mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 60px no-repeat;
-                mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 100px no-repeat;
+                mask: url(${require('../../../assets/car-body.svg')}) 0 0/100px 60px no-repeat;
                 `)
             const carImg = document.createElement('img');
 
