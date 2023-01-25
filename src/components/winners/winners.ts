@@ -1,10 +1,9 @@
-import { getAllCars, getAllWinners, QueryParamStrings } from '../controller/controller';
+import { CarBlueprint, getAllCars, getAllWinners, QueryParamStrings } from '../controller/controller';
 
 export class Winners {
     constructor(){}
     
     async render() {
-        const cars: QueryParamStrings = await getAllCars();
         const winners: QueryParamStrings = await getAllWinners();
         const winnersPage = document.createElement('div');
         winnersPage.classList.add('winners-container');
@@ -14,7 +13,7 @@ export class Winners {
         const positionColumn = document.createElement('div'); // position column
         positionColumn.classList.add('table-column');
         const positionColumnTitle = document.createElement('div');
-        positionColumnTitle.innerText = 'Number';
+        positionColumnTitle.innerText = 'Position';
         positionColumnTitle.classList.add('column-title');
         positionColumn.append(positionColumnTitle);
         winnersTable.append(positionColumn);
@@ -46,14 +45,17 @@ export class Winners {
         const carTimeColumn = document.createElement('div'); // car time column
         carTimeColumn.classList.add('table-column');
         const carTimeColumnTitle = document.createElement('div');
-        carTimeColumnTitle.innerText = 'Best Time';
+        carTimeColumnTitle.innerText = 'Best Time (s)';
         carTimeColumnTitle.classList.add('column-title');
         carTimeColumn.append(carTimeColumnTitle);
         winnersTable.append(carTimeColumn);
 
-        winners.map((position) => {
+        winners.map(async (position, index) => {
+            const carInfo = await CarBlueprint.getCar(parseInt(position.id));
+            console.log(carInfo)
+
             const positionDiv = document.createElement('div');
-            positionDiv.innerText = position.id;
+            positionDiv.innerText = `${index + 1}`;
             positionColumn.append(positionDiv);
 
             const carIcon = document.createElement('div');
@@ -63,7 +65,7 @@ export class Winners {
             carImgColumn.append(carIcon);
 
             const carName = document.createElement('div');
-            carName.innerText = '__';
+            carName.innerText = carInfo[0].name;
             carNameColumn.append(carName);
 
             const carWins = document.createElement('div');
@@ -71,7 +73,7 @@ export class Winners {
             carWinsColumn.append(carWins);
 
             const carTime = document.createElement('div');
-            carTime.innerText = position.time;
+            carTime.innerText = `${(parseInt(position.time) / 60).toFixed(2)}`;
             carTimeColumn.append(carTime);
         });
         winnersPage.append(winnersTable)

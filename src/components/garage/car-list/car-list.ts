@@ -137,7 +137,7 @@ export class CarList {
                 engineStart.disabled = true;
                 engineStop.disabled = false;
 
-                await animateCar(`${car.id}`, 'started');
+                await animateCar(`${car.id}`, 'started', `${car.name}`, `${car.color}`);
             }
             engineStop.onclick = async () => {
                 engineStart.disabled = false;

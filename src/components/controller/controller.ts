@@ -5,9 +5,6 @@ export const updateState = (data: string) => {
     state = data;
 };
 
-// interface carAnimation {
-//     [id: number]: number
-// }
 let animationID: { [key: string]: number } = {};
 
 export interface QueryParams {
@@ -54,13 +51,15 @@ export class CarBlueprint {
         return response;
     }
 
-    async getCar(id: number) {
+    static async getCar(id: number) {
         const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}];
 
         const qString = generateQueryString(params);
 
         const fetchResponse = fetch(`${baseURL}/garage/${qString}`);
         const fetchedData = await (await fetchResponse).json();
+
+        return fetchedData
     }
 
     static async deleteCar(id: string) {
@@ -176,12 +175,22 @@ export async function getAllWinners(page?:string, limit?:string, sort?:string, o
     console.log(fetchedData)
     return fetchedData
 }
+
 interface Winners {
-    [id: string]: number[]
+    [id: string]: (number|string)[]
 }
 export const winner: Winners = {}
 
-export async function animateCar(id: string, status: string) {
+export async function animateCar(id: string, status: string, carName?: string, carColor?: string) {
+    const carToMove = document.querySelector(`[data-id='${id}']`) as HTMLDivElement;
+
+    if (status === 'stopped') {
+        console.log('stopped')
+        window.cancelAnimationFrame(animationID[id]);
+        carToMove.style.transform = `translateX(0px)`;
+        return;
+    }
+
     const responseEngineStart = status === 'started' ? await CarBlueprint.startEngine(id) : await CarBlueprint.stopEngine(id);
     const responseEngineStartData = await (await responseEngineStart).json();
 
@@ -192,14 +201,6 @@ export async function animateCar(id: string, status: string) {
     const animationDuration = Math.floor(responseEngineStartData.distance / responseEngineStartData.velocity); // ms
 
     let startAnimation: number;
-    const carToMove = document.querySelector(`[data-id='${id}']`) as HTMLDivElement;
-
-    if (status === 'stopped') {
-        console.log('stopped')
-        window.cancelAnimationFrame(animationID[id]);
-        carToMove.style.transform = `translateX(0px)`;
-        return;
-    }
 
     let animID = requestAnimationFrame(measure);
     
@@ -220,8 +221,13 @@ export async function animateCar(id: string, status: string) {
         const isFailed = await CarBlueprint.switchEngine(id, 'drive') as Response;
         if (!isFailed.ok) throw new Error('Engine failed');
 
-        winner[id] = [responseEngineStartData.velocity]; // this but when the whole race is over
-        winner[id].push(animationDuration);
+        winner[id] = [responseEngineStartData.velocity as number];
+        winner[id].push(animationDuration as number);
+        if (carName && carColor) {
+            winner[id].push(carName);
+            winner[id].push(carColor);
+        }
+        
     } 
     catch(e) {
         window.cancelAnimationFrame(animID);

@@ -78,7 +78,7 @@ export class GarageControls {
             [id: number]: HTMLDivElement
         }
         raceButton.onclick = () => {
-            raceButton.disabled = true;
+            raceButton.disabled = true; // 
             const allCars = document.querySelectorAll('[data-id]') as CarElements;
 
             const allPromise: Promise<Response>[] = [];
@@ -87,17 +87,19 @@ export class GarageControls {
                 allPromise.push(animateResponse);
             })
             Promise.all(allPromise).then(async () => {
-                const sorted = Object.keys(winner).sort((a,b) => winner[b][0] - winner[a][0]);
+                const sorted = Object.keys(winner).sort((a,b) => {
+                    return ((winner[b][0] as number) - (winner[a][0] as number))
+                });
                 const winnerID = sorted[0];
                 const time = winner[winnerID][0];
-                // const velocity = winner[winnerID][1];
-                console.log(sorted, winnerID);
+                console.log('winners', winner);
+                console.log('sorted', sorted);
 
                 const winnerFetch = fetch(`http://localhost:3000/winner/${winnerID}`)
                 const wins = await (await winnerFetch).json();
                 const winsNum = wins.wins
 
-                CarBlueprint.createWinner(parseInt(winnerID), winsNum !== undefined ? winsNum + 1 : 1, time);
+                CarBlueprint.createWinner(parseInt(winnerID), winsNum !== undefined ? winsNum + 1 : 1, time as number);
             });
         }
 
