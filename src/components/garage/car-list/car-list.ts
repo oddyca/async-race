@@ -35,6 +35,7 @@ export class CarList {
             const engineStop = document.createElement('button');
             engineStop.classList.add('engine-button', 'engine-stop');
             engineStop.innerText = 'BR';
+            engineStop.disabled = true;
 
             engineControls.append(engineStart);
             engineControls.append(engineStop);
@@ -133,10 +134,16 @@ export class CarList {
             carList.append(carTrack);
 
             engineStart.onclick = async () => {
-                await animateCar(`${car.id}`);
+                engineStart.disabled = true;
+                engineStop.disabled = false;
+
+                await animateCar(`${car.id}`, 'started');
             }
             engineStop.onclick = async () => {
+                engineStart.disabled = false;
+                engineStop.disabled = true;
 
+                await animateCar(`${car.id}`, 'stopped');
             }
         });
 

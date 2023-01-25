@@ -83,7 +83,7 @@ export class GarageControls {
 
             const allPromise: Promise<Response>[] = [];
             Object.values(allCars).map(async (x) => {
-                const animateResponse = animateCar(`${x.dataset.id}`) as Promise<Response>
+                const animateResponse = animateCar(`${x.dataset.id}`, 'started') as Promise<Response>
                 allPromise.push(animateResponse);
             })
             Promise.all(allPromise).then(async () => {

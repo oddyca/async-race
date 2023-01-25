@@ -5,6 +5,11 @@ export const updateState = (data: string) => {
     state = data;
 };
 
+// interface carAnimation {
+//     [id: number]: number
+// }
+let animationID: { [key: string]: number } = {};
+
 export interface QueryParams {
     [key: string]: string
 }
@@ -82,33 +87,32 @@ export class CarBlueprint {
     }
 
     // Engine
-    static async startEngine(id: string, status: string) {
-        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': `${status}`}];
+    static async startEngine(id: string) {
+        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': 'started'}];
         const qString = generateQueryString(params);
 
         const toServer: QueryParams = {
-            id: id,
-            status: status
+            id: id
         }
         const response = await fetch(`${baseURL}/engine${qString}`, {
             method: 'PATCH',
             body: JSON.stringify(toServer)
         });
+
         return response;
     }
-    static async stopEngine(id: string, status: string) {
-        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': `${status}`}];
+    static async stopEngine(id: string) {
+        const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': 'stopped'}];
         const qString = generateQueryString(params);
 
         const toServer: QueryParams = {
-            id: id,
-            status: status
+            id: id
         }
         const response = await fetch(`${baseURL}/engine${qString}`, {
             method: 'PATCH',
             body: JSON.stringify(toServer)
         });
-        console.log(response)
+
         return response;
     }
     static async switchEngine(id: string, status: string) {
@@ -177,8 +181,8 @@ interface Winners {
 }
 export const winner: Winners = {}
 
-export async function animateCar(id: string) {
-    const responseEngineStart = await CarBlueprint.startEngine(id, 'started');
+export async function animateCar(id: string, status: string) {
+    const responseEngineStart = status === 'started' ? await CarBlueprint.startEngine(id) : await CarBlueprint.stopEngine(id);
     const responseEngineStartData = await (await responseEngineStart).json();
 
     const carCoord = document.querySelector(`[data-id='${id}']`)?.getBoundingClientRect().left as number;
@@ -190,7 +194,15 @@ export async function animateCar(id: string) {
     let startAnimation: number;
     const carToMove = document.querySelector(`[data-id='${id}']`) as HTMLDivElement;
 
+    if (status === 'stopped') {
+        console.log('stopped')
+        window.cancelAnimationFrame(animationID[id]);
+        carToMove.style.transform = `translateX(0px)`;
+        return;
+    }
+
     let animID = requestAnimationFrame(measure);
+    
     function measure(time: number){
         if (!startAnimation) {
             startAnimation = time;
@@ -199,7 +211,8 @@ export async function animateCar(id: string) {
         const translate = Math.floor(progress * distance);
         carToMove.style.transform = `translateX(${translate}px)`;
         if (progress < 1) {
-            animID = requestAnimationFrame(measure)
+            animID = requestAnimationFrame(measure);
+            animationID = {...animationID, [`${id}`]: animID}
         }
     }
 
