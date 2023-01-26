@@ -1,4 +1,4 @@
-import { CarBlueprint, getAllCars, getAllWinners, QueryParamStrings } from '../controller/controller';
+import { CarBlueprint, getAllWinners, QueryParamStrings } from '../controller/controller';
 
 export class Winners {
     constructor(){}

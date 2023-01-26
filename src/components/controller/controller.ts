@@ -1,5 +1,8 @@
 export const baseURL = 'http://localhost:3000';
 
+export let controller: AbortController;
+let signal: AbortSignal;
+
 export let state: string;
 export const updateState = (data: string) => {
     state = data;
@@ -115,6 +118,8 @@ export class CarBlueprint {
         return response;
     }
     static async switchEngine(id: string, status: string) {
+        controller = new AbortController();
+        signal = controller.signal;
         const params: QueryParamStrings = [{'key': 'id', 'value': `${id}`}, {'key': 'status', 'value': `${status}`}];
         const qString = generateQueryString(params);
 
@@ -122,9 +127,10 @@ export class CarBlueprint {
             id: id,
             status: status
         }
-        const response = await fetch(`${baseURL}/engine${qString}`, {
+        const response = /* await */ fetch(`${baseURL}/engine${qString}`, {
             method: 'PATCH',
-            body: JSON.stringify(toServer)
+            body: JSON.stringify(toServer),
+            signal: signal
         });
         console.log(response)
         return response;
@@ -176,16 +182,61 @@ export async function getAllWinners(page?:string, limit?:string, sort?:string, o
     return fetchedData
 }
 
+export function toggleButtons(mode: string) {
+    const buttonsToToggle = document.querySelectorAll('.button') as NodeListOf<HTMLButtonElement>;
+    const inputsToToggle = document.querySelectorAll('.garage-inputs') as NodeListOf<HTMLInputElement>;
+    buttonsToToggle.forEach((button) => {
+        if (mode === 'disable') {
+            button.disabled = true;
+        } else {
+            button.disabled = false;
+        }
+        if (button.classList[0] === 'update') {
+            button.disabled = true;
+        }
+    });
+    inputsToToggle.forEach((input) => {
+        if (mode === 'disable') {
+            input.disabled = true;
+            if (input.type === 'radio') {
+                const label = input.parentElement as HTMLLabelElement;
+                label.setAttribute('style', `
+                border: solid 2px grey;
+                background-color: grey;
+                color: darkgray;
+                cursor: default;
+                `)
+            }
+        } else {
+            input.disabled = false;
+
+            if (input.type === 'radio') {
+                const label = input.parentElement as HTMLLabelElement;
+                label.setAttribute('style', `
+                padding: .2rem .2rem;
+                border: solid 1px var(--neon-color);
+                background: none;
+                color: var(--neon-color);
+                cursor: pointer;`
+                )
+            }
+            if (input.classList[0] === 'update') {
+                input.disabled = true;
+            }
+        }
+    })
+}
+
 interface Winners {
     [id: string]: (number|string)[]
 }
 export const winner: Winners = {}
 
-export async function animateCar(id: string, status: string, carName?: string, carColor?: string) {
+export async function animateCar(id: string, status: string) {
     const carToMove = document.querySelector(`[data-id='${id}']`) as HTMLDivElement;
+    const wheelsToAnimate = [carToMove.children[0], carToMove.children[1]];
 
     if (status === 'stopped') {
-        console.log('stopped')
         window.cancelAnimationFrame(animationID[id]);
         carToMove.style.transform = `translateX(0px)`;
         return;
@@ -197,7 +248,7 @@ export async function animateCar(id: string, status: string, carName?: string, c
     const carCoord = document.querySelector(`[data-id='${id}']`)?.getBoundingClientRect().left as number;
     const flagCoord = document.querySelector('.finish-flag')?.getBoundingClientRect().left as number;
 
-    const distance =  Math.floor(flagCoord - carCoord); // px
+    const distance = Math.floor(flagCoord - carCoord); // px
     const animationDuration = Math.floor(responseEngineStartData.distance / responseEngineStartData.velocity); // ms
 
     let startAnimation: number;
@@ -208,9 +259,15 @@ export async function animateCar(id: string, status: string, carName?: string, c
         if (!startAnimation) {
             startAnimation = time;
         }
+
+        let rotationDegree = 0;
         const progress = (time - startAnimation) / animationDuration;
         const translate = Math.floor(progress * distance);
         carToMove.style.transform = `translateX(${translate}px)`;
+        wheelsToAnimate.forEach((wheel) => {
+            rotationDegree = rotationDegree + 15;
+            (<HTMLImageElement>wheel.children[0]).style.transform = `rotate(${rotationDegree}deg)`;
+        })
         if (progress < 1) {
             animID = requestAnimationFrame(measure);
             animationID = {...animationID, [`${id}`]: animID}
@@ -219,15 +276,13 @@ export async function animateCar(id: string, status: string, carName?: string, c
 
     try {
         const isFailed = await CarBlueprint.switchEngine(id, 'drive') as Response;
+
         if (!isFailed.ok) throw new Error('Engine failed');
 
         winner[id] = [responseEngineStartData.velocity as number];
         winner[id].push(animationDuration as number);
-        if (carName && carColor) {
-            winner[id].push(carName);
-            winner[id].push(carColor);
-        }
-        
+        // winner[id].push(carName);
+        // winner[id].push(carColor);
     } 
     catch(e) {
         window.cancelAnimationFrame(animID);

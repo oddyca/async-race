@@ -30,7 +30,7 @@ export class CarList {
             const engineControls = document.createElement('div');
             engineControls.classList.add('car-slot_engine-controls');
             const engineStart = document.createElement('button');
-            engineStart.classList.add('engine-button', 'engine-start');
+            engineStart.classList.add('engine-button', 'engine-start', 'button');
             engineStart.innerText = 'GO';
             const engineStop = document.createElement('button');
             engineStop.classList.add('engine-button', 'engine-stop');
@@ -53,6 +53,7 @@ export class CarList {
             const carSelectRadio = document.createElement('input');
             carSelectRadio.setAttribute('type', 'radio');
             carSelectRadio.setAttribute('name', 'car-list-form');
+            carSelectRadio.classList.add('garage-inputs');
             carSelectRadio.id = car.id;
             carSelectRadio.dataset.name = car.name;
             carSelectRadio.dataset.color = car.color;
@@ -65,7 +66,7 @@ export class CarList {
             }
 
             const carRemove = document.createElement('button');
-            carRemove.classList.add('car-controls_buttons', 'car-controls_delete');
+            carRemove.classList.add('car-controls_buttons', 'car-controls_delete', 'button');
             carRemove.innerText = 'DELETE';
             carRemove.dataset
             carRemove.onclick = async () => {
@@ -137,7 +138,7 @@ export class CarList {
                 engineStart.disabled = true;
                 engineStop.disabled = false;
 
-                await animateCar(`${car.id}`, 'started', `${car.name}`, `${car.color}`);
+                await animateCar(`${car.id}`, 'started');
             }
             engineStop.onclick = async () => {
                 engineStart.disabled = false;

@@ -109,8 +109,10 @@
     background-color: var(--yellow-active);
 }
 
-.garage-controls_race-controls {
-
+.create-car_button:disabled, .car-controls_delete:disabled {
+    border: solid 2px grey;
+    background-color: grey;
+    color: darkgray;
 }
 
 .carlist-container {
