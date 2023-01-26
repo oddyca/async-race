@@ -1,4 +1,4 @@
-import { animateCar, CarBlueprint, state, winner, toggleButtons, getAllCars, QueryParamStrings, controller } from '../../controller/controller';
+import { animateCar, CarBlueprint, state, winner, toggleButtons, getAllCars, QueryParamStrings, controller, getWinner, updateWinner, generateCars } from '../../controller/controller';
 import { App } from '../../app';
 
 export class GarageControls {
@@ -102,14 +102,16 @@ export class GarageControls {
                 const winnerID = sorted[0];
                 const time = winner[winnerID][0];
 
-                const winnerFetch = fetch(`http://localhost:3000/winner/${winnerID}`)
-                const wins = await (await winnerFetch).json();
-                const winsNum = wins.wins
-                // CHECK IF WINNER IS IN THE DB
-                // IF SO -> UPDATE()
-                // ELSE -> CREATE()
+                try {
+                    const winnerResponse = await getWinner(winnerID);
+                    if (!winnerResponse.ok) throw new Error('Winner not found');
 
-                CarBlueprint.createWinner(parseInt(winnerID), winsNum !== undefined ? winsNum + 1 : 1, time as number);
+                    const winenerInfo = await winnerResponse.json();
+                    const winsNum = winenerInfo.wins;
+                    await updateWinner(parseInt(winnerID), winsNum + 1, time as number)
+                } catch(e) {
+                    CarBlueprint.createWinner(parseInt(winnerID), 1, time as number);
+                }
             });
         }
 
@@ -133,7 +135,12 @@ export class GarageControls {
         generateCarsButton.innerText = 'GENERATE CARS';
         generateCarsButton.classList.add('race-controls', 'generate-button');
 
-        generateCarsButton.disabled = true;                     // DISABLED
+        generateCarsButton.onclick = async () => {
+            await generateCars();
+            const carsToRender = await App.run();
+            document.querySelector('.garage-container')?.remove();
+            document.querySelector('#app')?.append(carsToRender);
+        };
 
         raceControls.append(raceButton);
         raceControls.append(resetButton);

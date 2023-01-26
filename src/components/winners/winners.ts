@@ -52,7 +52,6 @@ export class Winners {
 
         winners.map(async (position, index) => {
             const carInfo = await CarBlueprint.getCar(parseInt(position.id));
-            console.log(carInfo)
 
             const positionDiv = document.createElement('div');
             positionDiv.innerText = `${index + 1}`;

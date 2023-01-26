@@ -43,15 +43,13 @@ export class CarBlueprint {
             color: this.color
         }
 
-        const response = await fetch(`${baseURL}/garage`, {
+        await fetch(`${baseURL}/garage`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(toServer)
         });
-
-        return response;
     }
 
     static async getCar(id: number) {
@@ -143,15 +141,34 @@ export class CarBlueprint {
             wins: wins,
             time: time
         }
-        const response = await fetch(`${baseURL}/winners`, {
+        await fetch(`${baseURL}/winners`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(toServer)
         });
-        return response;
     }
+}
+
+export async function generateCars() {
+    const namePool = ['Opel', 'Audi', 'Hummer', 'Lada', 'Pegoue', 'Ferrari', 'Lamborghini', 'Aston Martin', 'Porsche'];
+    const modelPool = ['Model S', 'Model X', '206', 'Granta', '911', 'Cayene', 'Gallardo', 'Diablo', 'DB9', 'Spider'];
+
+    interface Cars {
+        [name: string]: string[] // [model, color]
+    }
+    const generatedCars: Cars = {}
+
+    for (let i = 0; i < 100; i++) {
+        generatedCars[namePool[Math.floor(Math.random()*namePool.length)]] = [`${modelPool[Math.floor(Math.random()*modelPool.length)]}`, `${Math.floor(Math.random()*16777215).toString(16)}`]
+    }
+
+    Object.keys(generatedCars).map(async (car) => {
+        const newCar = new CarBlueprint(`${car} ${generatedCars[car][0]}`, `#${generatedCars[car][1]}`);
+
+        await newCar.createCar();
+    })
 }
 
 export async function getAllCars() {
@@ -159,6 +176,27 @@ export async function getAllCars() {
     const fetchedData = await (await get).json();
 
     return fetchedData;
+}
+
+export async function getWinner(id: string) {
+    const fetchResponse = fetch(`${baseURL}/winners/${id}`);
+
+    return fetchResponse
+}
+
+export async function updateWinner(id: number, wins: number, time: number) {
+    const toServer: Stats = {
+        wins: wins,
+        time: time
+    }
+    const response = await fetch(`${baseURL}/winners/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(toServer)
+    });
+    return response;
 }
 
 export async function getAllWinners(page?:string, limit?:string, sort?:string, order?:string) {
@@ -239,6 +277,9 @@ export async function animateCar(id: string, status: string) {
     if (status === 'stopped') {
         window.cancelAnimationFrame(animationID[id]);
         carToMove.style.transform = `translateX(0px)`;
+        wheelsToAnimate.forEach((wheel) => {
+            (<HTMLImageElement>wheel.children[0]).style.transform = `rotate(0deg)`;
+        })
         return;
     }
 
@@ -281,8 +322,6 @@ export async function animateCar(id: string, status: string) {
 
         winner[id] = [responseEngineStartData.velocity as number];
         winner[id].push(animationDuration as number);
-        // winner[id].push(carName);
-        // winner[id].push(carColor);
     } 
     catch(e) {
         window.cancelAnimationFrame(animID);
