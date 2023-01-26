@@ -30,11 +30,19 @@ export class CarList {
             const engineControls = document.createElement('div');
             engineControls.classList.add('car-slot_engine-controls');
             const engineStart = document.createElement('button');
+<<<<<<< HEAD
             engineStart.classList.add('engine-button', 'engine-start');
+=======
+            engineStart.classList.add('engine-button', 'engine-start', 'button');
+>>>>>>> async-race
             engineStart.innerText = 'GO';
             const engineStop = document.createElement('button');
             engineStop.classList.add('engine-button', 'engine-stop');
             engineStop.innerText = 'BR';
+<<<<<<< HEAD
+=======
+            engineStop.disabled = true;
+>>>>>>> async-race
 
             engineControls.append(engineStart);
             engineControls.append(engineStop);
@@ -52,6 +60,10 @@ export class CarList {
             const carSelectRadio = document.createElement('input');
             carSelectRadio.setAttribute('type', 'radio');
             carSelectRadio.setAttribute('name', 'car-list-form');
+<<<<<<< HEAD
+=======
+            carSelectRadio.classList.add('garage-inputs');
+>>>>>>> async-race
             carSelectRadio.id = car.id;
             carSelectRadio.dataset.name = car.name;
             carSelectRadio.dataset.color = car.color;
@@ -64,7 +76,11 @@ export class CarList {
             }
 
             const carRemove = document.createElement('button');
+<<<<<<< HEAD
             carRemove.classList.add('car-controls_buttons', 'car-controls_delete');
+=======
+            carRemove.classList.add('car-controls_buttons', 'car-controls_delete', 'button');
+>>>>>>> async-race
             carRemove.innerText = 'DELETE';
             carRemove.dataset
             carRemove.onclick = async () => {
@@ -133,10 +149,23 @@ export class CarList {
             carList.append(carTrack);
 
             engineStart.onclick = async () => {
+<<<<<<< HEAD
                 await animateCar(`${car.id}`);
             }
             engineStop.onclick = async () => {
 
+=======
+                engineStart.disabled = true;
+                engineStop.disabled = false;
+
+                await animateCar(`${car.id}`, 'started');
+            }
+            engineStop.onclick = async () => {
+                engineStart.disabled = false;
+                engineStop.disabled = true;
+
+                await animateCar(`${car.id}`, 'stopped');
+>>>>>>> async-race
             }
         });
 

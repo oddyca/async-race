@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 import { getAllCars, getAllWinners, QueryParamStrings } from '../controller/controller';
+=======
+import { CarBlueprint, getAllWinners, QueryParamStrings } from '../controller/controller';
+>>>>>>> async-race
 
 export class Winners {
     constructor(){}
     
     async render() {
+<<<<<<< HEAD
         const cars: QueryParamStrings = await getAllCars();
+=======
+>>>>>>> async-race
         const winners: QueryParamStrings = await getAllWinners();
         const winnersPage = document.createElement('div');
         winnersPage.classList.add('winners-container');
@@ -14,7 +21,11 @@ export class Winners {
         const positionColumn = document.createElement('div'); // position column
         positionColumn.classList.add('table-column');
         const positionColumnTitle = document.createElement('div');
+<<<<<<< HEAD
         positionColumnTitle.innerText = 'Number';
+=======
+        positionColumnTitle.innerText = 'Position';
+>>>>>>> async-race
         positionColumnTitle.classList.add('column-title');
         positionColumn.append(positionColumnTitle);
         winnersTable.append(positionColumn);
@@ -46,14 +57,26 @@ export class Winners {
         const carTimeColumn = document.createElement('div'); // car time column
         carTimeColumn.classList.add('table-column');
         const carTimeColumnTitle = document.createElement('div');
+<<<<<<< HEAD
         carTimeColumnTitle.innerText = 'Best Time';
+=======
+        carTimeColumnTitle.innerText = 'Best Time (s)';
+>>>>>>> async-race
         carTimeColumnTitle.classList.add('column-title');
         carTimeColumn.append(carTimeColumnTitle);
         winnersTable.append(carTimeColumn);
 
+<<<<<<< HEAD
         winners.map((position) => {
             const positionDiv = document.createElement('div');
             positionDiv.innerText = position.id;
+=======
+        winners.map(async (position, index) => {
+            const carInfo = await CarBlueprint.getCar(parseInt(position.id));
+
+            const positionDiv = document.createElement('div');
+            positionDiv.innerText = `${index + 1}`;
+>>>>>>> async-race
             positionColumn.append(positionDiv);
 
             const carIcon = document.createElement('div');
@@ -63,7 +86,11 @@ export class Winners {
             carImgColumn.append(carIcon);
 
             const carName = document.createElement('div');
+<<<<<<< HEAD
             carName.innerText = '__';
+=======
+            carName.innerText = carInfo[0].name;
+>>>>>>> async-race
             carNameColumn.append(carName);
 
             const carWins = document.createElement('div');
@@ -71,7 +98,11 @@ export class Winners {
             carWinsColumn.append(carWins);
 
             const carTime = document.createElement('div');
+<<<<<<< HEAD
             carTime.innerText = position.time;
+=======
+            carTime.innerText = `${(parseInt(position.time) / 60).toFixed(2)}`;
+>>>>>>> async-race
             carTimeColumn.append(carTime);
         });
         winnersPage.append(winnersTable)
