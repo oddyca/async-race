@@ -254,13 +254,13 @@ export async function animateCar(id: string, status: string) {
     let startAnimation: number;
 
     let animID = requestAnimationFrame(measure);
-    
+    let rotationDegree = 0;
+
     function measure(time: number){
         if (!startAnimation) {
             startAnimation = time;
         }
-
-        let rotationDegree = 0;
+        
         const progress = (time - startAnimation) / animationDuration;
         const translate = Math.floor(progress * distance);
         carToMove.style.transform = `translateX(${translate}px)`;

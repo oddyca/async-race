@@ -102,7 +102,7 @@ export class GarageControls {
                 const winnerID = sorted[0];
                 const time = winner[winnerID][0];
 
-                const winnerFetch = fetch(`http://localhost:3000/winner/${winnerID}`/*, {signal: controller.signal}*/)
+                const winnerFetch = fetch(`http://localhost:3000/winner/${winnerID}`)
                 const wins = await (await winnerFetch).json();
                 const winsNum = wins.wins
                 // CHECK IF WINNER IS IN THE DB
