@@ -1,0 +1,274 @@
+:root {
+    --neon-color: rgb(18, 194, 165);
+    --neon-color-hover: rgb(0, 255, 213);
+    --comment-grey: rgb(177, 177, 177);
+    --green: rgb(83, 241, 131);
+    --green-hover: rgb(164, 255, 192);
+    --green-active: rgb(45, 207, 94);
+    --yellow: rgb(236, 248, 70);
+    --yellow-hover: rgb(247, 255, 128);
+    --yellow-active: rgb(195, 209, 5);
+    --red: rgb(207, 56, 45);
+    --red-hover: rgb(248, 94, 83);
+    --red-active: rgb(161, 27, 17);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#app {
+    background-color: black;
+    color: white;
+    min-height: 100vh;
+}
+
+.navbar {
+    display: flex;
+    gap: 1rem;
+    position: absolute;
+    z-index: 10;
+    left: 40%;
+    top: 0;
+}
+
+.navbar_to {
+    padding: .5rem 2rem;
+    cursor: pointer;
+    border: solid hotpink;
+    text-decoration: none;
+}
+
+.navbar_to, .navbar_to:visited, .navbar_to:hover, .navbar_to:active {
+    color: white;
+  }
+
+.garage-container {
+    background: url('./assets/synth-bg.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position-y: -450px;
+    background-color: black;
+    height: fit-content;
+    width: 100%;
+    position: absolute;
+    padding: 1rem;
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.garage-controls {
+    width: fit-content;
+    padding: .5rem;
+    border: solid 1px hotpink;
+    box-shadow: 0px 0px 8px hotpink;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.garage-controls_create-car, .garage-controls_update-car, .garage-controls_race-controls {
+    display: flex;
+    gap: .5rem;
+}
+
+.create-car_button, .update-car_button, .race-controls {
+    font-size: 12px;
+    padding: 0 .2rem;
+    cursor: pointer;
+}
+
+.create-car_button {
+    border: solid 2px var(--green-active);
+    background-color: var(--green);
+}
+
+.create-car_button:hover {
+    border: solid 2px var(--green-hover);
+    background-color: var(--green-hover);
+    box-shadow: 0px 0px 6px var(--green-hover);
+}
+
+.create-car_button:active {
+    border: solid 2px var(--green-active);
+    background-color: var(--green-active);
+}
+
+.update-car_button:hover:enabled {
+    border: solid 2px var(--yellow-hover);
+    background-color: var(--yellow-hover);
+    box-shadow: 0px 0px 6px var(--yellow-hover);
+}
+
+.update-car_button:active:enabled {
+    border: solid 2px var(--yellow-active);
+    background-color: var(--yellow-active);
+}
+
+.create-car_button:disabled, .car-controls_delete:disabled {
+    border: solid 2px grey;
+    background-color: grey;
+    color: darkgray;
+}
+
+.carlist-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.garage_car-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.track {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10rem;
+}
+
+.car-slot {
+    min-width: fit-content;
+    width: 160px;
+}
+
+.track_car-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.car-controls_buttons {
+    padding: .2rem .2rem;
+    border: solid 1px var(--neon-color);
+    background: none;
+    color: var(--neon-color);
+    cursor: pointer;
+}
+
+.car-controls_select:hover {
+    border: solid 1px var(--neon-color-hover);
+    color: var(--neon-color-hover);
+    box-shadow: 0px 0px 5px var(--neon-color-hover);
+}
+
+.car-controls_select:has(input[type='radio']:checked) {
+    background-color: var(--neon-color);
+    color: white;
+}
+
+input[type='radio'] {
+    display: none;
+}
+
+.car-controls_delete {
+    border: solid 1px var(--red);
+    background-color: var(--red);
+    color: white;
+}
+
+.car-controls_delete:hover {
+    border: solid 1px var(--red-hover);
+    background-color: var(--red-hover);
+    box-shadow: 0px 0px 5px var(--red-hover);
+}
+
+.car-controls_delete:active {
+    border: solid 1px var(--red-active);
+    background-color: var(--red-active);
+}
+
+.car-name {
+    font-size: 12px;
+    color: var(--comment-grey);
+}
+
+.car {
+    width: fit-content;
+    height: 50px;
+    position: relative;
+    display: flex;
+}
+
+.car-slot_engine-controls {
+    display: flex;
+}
+
+.engine-button {
+    height: fit-content;
+    width: fit-content;
+    padding: 2px 2px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.car-body {
+    position: relative;
+    height: fit-content;
+}
+
+.car_body-frame {
+    position: relative;
+    bottom: 0px;
+    width: 100px;
+    height: 45px;
+}
+
+.wheels {
+    position: absolute;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+}
+
+.car_front-wheel {
+    right: 17px;
+}
+.car_rear-wheel {
+    left: 11px;
+}
+
+.car_wheel-img {
+    width: 15px;
+    height: 15px;
+}
+.track {
+    width: 100%;
+    border-bottom: 1px solid hotpink;
+}
+
+.finish-flag {
+    height: 32px;
+    width: auto;
+}
+
+.winners-table {
+    display: flex;
+    border: solid 1px var(--neon-color-hover);
+    width: fit-content;
+}
+
+.column-title {
+    background-color: var(--neon-color);
+    padding: .2rem 2rem;
+}
+
+.table-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+@media (max-width: 1440px) {
+    .garage-container {
+        background-position-y: -150px;
+    }
+}
