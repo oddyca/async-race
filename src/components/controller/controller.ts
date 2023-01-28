@@ -155,20 +155,14 @@ export async function generateCars() {
     const namePool = ['Opel', 'Audi', 'Hummer', 'Lada', 'Pegoue', 'Ferrari', 'Lamborghini', 'Aston Martin', 'Porsche'];
     const modelPool = ['Model S', 'Model X', '206', 'Granta', '911', 'Cayene', 'Gallardo', 'Diablo', 'DB9', 'Spider'];
 
-    interface Cars {
-        [name: string]: string[] // [model, color]
-    }
-    const generatedCars: Cars = {}
-
     for (let i = 0; i < 100; i++) {
-        generatedCars[namePool[Math.floor(Math.random()*namePool.length)]] = [`${modelPool[Math.floor(Math.random()*modelPool.length)]}`, `${Math.floor(Math.random()*16777215).toString(16)}`]
-    }
+        const carName = namePool[Math.floor(Math.random()*namePool.length)];
+        const carModel = modelPool[Math.floor(Math.random()*modelPool.length)];
+        const carColor = Math.floor(Math.random()*16777215).toString(16);
 
-    Object.keys(generatedCars).map(async (car) => {
-        const newCar = new CarBlueprint(`${car} ${generatedCars[car][0]}`, `#${generatedCars[car][1]}`);
-
+        const newCar = new CarBlueprint(`${carName} ${carModel}`, `#${carColor}`);
         await newCar.createCar();
-    })
+    }
 }
 
 export async function getAllCars() {

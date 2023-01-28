@@ -115,7 +115,6 @@ export class GarageControls {
             });
         }
 
-
         const resetButton = document.createElement('button');
         resetButton.classList.add('race-controls', 'reset-button');
         resetButton.innerText = 'RESET';
